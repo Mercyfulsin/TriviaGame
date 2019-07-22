@@ -2,12 +2,9 @@
     background-color: #ff11ff;
     height: 500px;
     opacity: 0.5;
+    text-align: center;
 }
 .container {
-    /* background-color: #ff11ff;
-    width: 500px;
-    height: 500px;
-    opacity: 0.5; */
     position: absolute;
     border-style: groove;
     border-width: 5px;

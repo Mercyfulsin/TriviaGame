@@ -1,0 +1,21 @@
+#question-box {
+    background-color: #ff11ff;
+    width: 500px;
+    height: 500px;
+    opacity: 0.5;
+}
+
+.container {
+    position: absolute;
+    border-style: groove;
+    border-width: 5px;
+    border-color: #ff00ff;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+body {
+    background-image: url('../images/kingscross.jpg');
+    background-size: cover;
+}

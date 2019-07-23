@@ -1,26 +1,44 @@
 #question-box {
-    background-color: #ff11ff;
     height: 500px;
-    opacity: 0.5;
     text-align: center;
+    font-weight: bold;
+    display:flex;
+    justify-content: center;
+    font-family: 'harry_pregular';
+    font-size: 30px;
 }
 .container {
     position: absolute;
     border-style: groove;
     border-width: 5px;
     border-color: #ff00ff;
+    background: rgba(255,17,255, 0.5);
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+}
+p{
+    opacity: 1;
 }
 body {
     background-image: url('../images/kingscross.jpg');
     background-size: cover;
 }
-button{
+.choices{
+    background: none;
+    border: none;
+    display: block;
+    
+}
+.choices:hover{
+    border: solid;
+    border-color:blue;
+}
+#start{
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     opacity: 1.0;
+    
 }

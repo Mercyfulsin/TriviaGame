@@ -3,7 +3,8 @@ var data = '{ "q1": { "question": "Who teaches Harry how to play Wizard’s ches
 //HTML variables
 var qBox, qQuestion, qChoices, timerText;
 //JS variables
-var questionArr, correctAnswers, intervalId;
+var questionArr, intervalId;
+var correctAnswers = wrongAnswers = 0;
 var questionKeys = [];
 var time = 15;
 var qInProgress = false;
@@ -12,7 +13,7 @@ var currQuestion = 1;
 $(document).ready(function () {
     qBox = $("#question-box");
     qQuestion = $("#question");
-    qChoices = $("#answer");
+    qChoices = $("#choices");
     timerText = $("#timer");
     questionArr = JSON.parse(data);
     for (var key in questionArr) {
@@ -32,7 +33,7 @@ function initialize() {
     startBtn.click(function () {
         timerText.text(timeConverter(time));
         start();
-        displayQuestion(currQuestion);
+        displayQuestion();
         $(this).remove();
     });
     $(".container").append(startBtn);
@@ -56,13 +57,14 @@ function countDown() {
     time--;
     timerText.text(timeConverter(time));
     if (time == 0) {
+        wrongAnswers++;
         stop();
         tookToLong();
         if (currQuestion == 10) {
             gameOver();
         } else {
             currQuestion++;
-            displayQuestion(currQuestion);
+            displayQuestion();
             start();
         }
     }
@@ -70,8 +72,29 @@ function countDown() {
 
 function gameOver() { };
 
-function displayQuestion(index) {
-    qQuestion.text(questionArr[questionKeys[index]].question);
+function displayQuestion() {
+    var qObject = questionArr[questionKeys[currQuestion]];
+    qQuestion.text(qObject.question);
+    qObject.choices.forEach((element, index) => {
+        var tempBtn = $("<button>");
+        tempBtn.attr("id",index);
+        tempBtn.addClass("choices");
+        tempBtn.text(element);
+        tempBtn.click(function(){
+            submitAnswer($(this).attr("id"));
+        });
+        qChoices.append(tempBtn);
+    });
+    
+}
+
+function submitAnswer(choice){
+    var choices = questionArr[questionKeys[index]].choices;
+    var answer = parseInt(questionArr[questionKeys[index]].answer);
+    if(choice == choices[answer]){
+        correctAnswers++;
+        console.log("Correct Answer: " + correctAnswers);
+    }
 }
 
 function timeConverter(t) {

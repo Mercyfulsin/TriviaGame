@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <meta charset="UTF-8">
     <title>Harry Potter Trivia!</title>
@@ -7,17 +8,20 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
         integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="assets/css/stylesheet.css">
 </head>
 
 <body>
 
-    <div class="container">
+    <div class="container" id="question-box">
 
         <div class="row">
-            <div class="col-lg-12" id="question-box">
-                <h1><p id="timer"></p></h1>
+            <div class="col-lg-12">
+                <h1>
+                    <p id="timer"></p>
+                </h1>
                 <p id="question"></p>
-                <p id="choices"></p>
+                <div id="choices"></div>
             </div>
         </div>
     </div>

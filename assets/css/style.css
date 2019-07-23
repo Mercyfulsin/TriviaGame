@@ -1,5 +1,6 @@
 #question-box {
     height: 500px;
+    width: 800px;
     text-align: center;
     font-weight: bold;
     display:flex;
@@ -12,7 +13,7 @@
     border-style: groove;
     border-width: 5px;
     border-color: #ff00ff;
-    background: rgba(255,17,255, 0.5);
+    background: rgba(77,138,146, 0.5);
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);

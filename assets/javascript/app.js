@@ -8,7 +8,7 @@ var correctAnswers = wrongAnswers = 0;
 var questionKeys = [];
 var time = 15;
 var qInProgress = false;
-var currQuestion = 1;
+var currQuestion = 0;
 
 $(document).ready(function () {
     qBox = $("#question-box");
@@ -53,6 +53,7 @@ function stop() {
     qInProgress = false;
     time = 15;
 }
+
 function countDown() {
     time--;
     timerText.text(timeConverter(time));
@@ -60,40 +61,52 @@ function countDown() {
         wrongAnswers++;
         stop();
         tookToLong();
-        if (currQuestion == 10) {
-            gameOver();
-        } else {
-            currQuestion++;
-            displayQuestion();
-            start();
-        }
+        nextQuestion();
     }
 }
 
 function gameOver() { };
 
+function nextQuestion() {
+    if (currQuestion == 9) {
+        gameOver();
+    } else {
+        currQuestion++;
+        displayQuestion();
+        start();
+    }
+}
 function displayQuestion() {
     var qObject = questionArr[questionKeys[currQuestion]];
     qQuestion.text(qObject.question);
+
+    qChoices.empty();
     qObject.choices.forEach((element, index) => {
         var tempBtn = $("<button>");
-        tempBtn.attr("id",index);
+        tempBtn.attr("id", index);
         tempBtn.addClass("choices");
         tempBtn.text(element);
-        tempBtn.click(function(){
+        tempBtn.click(function () {
             submitAnswer($(this).attr("id"));
+            console.log("clicked", this);
         });
         qChoices.append(tempBtn);
     });
-    
+
 }
 
-function submitAnswer(choice){
-    var choices = questionArr[questionKeys[index]].choices;
-    var answer = parseInt(questionArr[questionKeys[index]].answer);
-    if(choice == choices[answer]){
+function submitAnswer(choice) {
+    var answer = questionArr[questionKeys[currQuestion]].answer;
+    if (choice == answer) {
         correctAnswers++;
+        stop();
         console.log("Correct Answer: " + correctAnswers);
+        nextQuestion();
+    } else {
+        wrongAnswers++;
+        stop();
+        console.log("Wrong Answer: " + wrongAnswers);
+        nextQuestion();
     }
 }
 

@@ -1,14 +1,9 @@
 #question-box {
-    height: 500px;
-    width: 800px;
-    text-align: center;
-    font-weight: bold;
-    display:flex;
-    justify-content: center;
-    font-family: 'harry_pregular';
-    font-size: 30px;
+    
 }
 .container {
+    height: 500px;
+    width: 800px;
     position: absolute;
     border-style: groove;
     border-width: 5px;
@@ -17,6 +12,12 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+    text-align: center;
+    font-weight: bold;
+    display:flex;
+    justify-content: center;
+    font-family: 'harry_pregular';
+    font-size: 30px;
 }
 p{
     opacity: 1;
@@ -42,4 +43,9 @@ body {
     transform: translate(-50%, -50%);
     opacity: 1.0;
     
+}
+#restart{
+    position: absolute;
+    bottom: 30px;
+    opacity: 1.0;
 }

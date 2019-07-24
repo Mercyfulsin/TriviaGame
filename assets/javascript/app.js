@@ -4,7 +4,7 @@ var data = '{ "q1": { "question": "Who teaches Harry how to play Wizard’s ches
 var qBox, qQuestion, qChoices, timerText;
 //JS variables
 var questionArr, intervalId;
-var correctAnswers = wrongAnswers = 0;
+var correctAnswers = wrongAnswers = missedAnswers = 0;
 var questionKeys = [];
 var time = 15;
 var qInProgress = false;
@@ -26,10 +26,20 @@ $(document).ready(function () {
 });
 
 
-function initialize() {
+function initialize(restart) {
+    //Works with most modern browsers EXCEPT chrome {security reasons?}
+    // $.getJSON("trivia.json", function(json) {
+    //     console.log(json); // this will show the info it in firebug console
+    // });
+
     var startBtn = $("<button>");
-    startBtn.text("Start Game!");
-    startBtn.attr("id", "start");
+    if (restart !== undefined) {
+        startBtn.attr("id", "restart");
+        startBtn.text("Try Again?");
+    } else {
+        startBtn.attr("id", "start");
+        startBtn.text("Start Game!");
+    }
     startBtn.click(function () {
         timerText.text(timeConverter(time));
         start();
@@ -62,7 +72,7 @@ function countDown() {
     time--;
     timerText.text(timeConverter(time));
     if (time == 0) {
-        wrongAnswers++;
+        missedAnswers++;
         stop();
         tookToLong();
         nextQuestion();
@@ -103,9 +113,8 @@ function nextQuestion() {
 
 function displayQuestion() {
     var qObject = questionArr[questionKeys[currQuestion]];
+    emptyHTML();
     qQuestion.text(qObject.question);
-
-    qChoices.empty();
     qObject.choices.forEach((element, index) => {
         var tempBtn = $("<button>");
         tempBtn.attr("id", index);
@@ -135,10 +144,17 @@ function submitAnswer(choice) {
     }
 }
 
+function emptyHTML() {
+    qQuestion.empty();
+    qChoices.empty();
+}
 
 
 function gameOver() {
-    "<h1>Results:</h1><br><h3>Correct Answers: <h3>" + correctAnswers + "<br>" +
-    "<h3>Wrong Answers: <h3>" + wrongAnswers + "<br>" +
-    ""
+    var endPage = "<h1>Results:</h1><h3>Correct Answers: <h3>" + correctAnswers + "<br>" +
+        "<h3>Wrong Answers: <h3>" + wrongAnswers + "<br>" +
+        "<h3>Missed Answers: <h3>" + missedAnswers + "<br>";
+    emptyHTML();
+    qQuestion.html(endPage);
+    initialize("restart");
 };

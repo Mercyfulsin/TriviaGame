@@ -3,6 +3,9 @@ var data = '{ "q1": { "question": "Who teaches Harry how to play Wizard’s ches
 //HTML variables
 var qBox, qQuestion, qChoices, timerText;
 //JS variables
+var wrongGiphy = ["https://media.giphy.com/media/JAbAmpu1TshlS/giphy.gif","https://thumbs.gfycat.com/ImportantDisgustingJanenschia-max-1mb.gif","https://i.makeagif.com/media/3-28-2015/jScr_Q.gif"];
+var correctGiphy = ["https://media1.tenor.com/images/5e35fe87910ea9d4ec7140489d9cc70a/tenor.gif?itemid=4669304","https://media0.giphy.com/media/qLHzYjlA2FW8g/giphy.gif","https://66.media.tumblr.com/71f6a90971c389778b2c7f98c5f6692b/tumblr_oiojaowPTW1w0nutjo1_500.gif"];
+var timeoutGiphy = ["https://hips.hearstapps.com/digitalspyuk.cdnds.net/16/46/1479307306-harry-potter-philosophers-stone-wand-daniel-radcliffe.gif","https://media1.tenor.com/images/446fa599b8838be122719c655d845c10/tenor.gif?itemid=12099879",""];
 var questionArr, intervalId;
 var correctAnswers = wrongAnswers = missedAnswers = 0;
 var questionKeys = [];
@@ -25,32 +28,6 @@ $(document).ready(function () {
     initialize();
 });
 
-
-function initialize(restart) {
-    //Works with most modern browsers EXCEPT chrome {security reasons?}
-    // $.getJSON("trivia.json", function(json) {
-    //     console.log(json); // this will show the info it in firebug console
-    // });
-
-    var startBtn = $("<button>");
-    if (restart !== undefined) {
-        startBtn.attr("id", "restart");
-        startBtn.text("Try Again?");
-    } else {
-        startBtn.attr("id", "start");
-        startBtn.text("Start Game!");
-    }
-    startBtn.click(function () {
-        timerText.text(timeConverter(time));
-        start();
-        displayQuestion();
-        $(this).remove();
-    });
-    $(".container").append(startBtn);
-}
-
-
-
 //==========================
 // Timer related functions
 //==========================
@@ -65,17 +42,17 @@ function stop() {
     clearInterval(intervalId);
     qInProgress = false;
     time = 15;
-    timerText.text(timeConverter(time));
+    timerText.text("Time Remaining: " + timeConverter(time));
 }
 
 function countDown() {
     time--;
-    timerText.text(timeConverter(time));
+    timerText.text("Time Remaining: " + timeConverter(time));
     if (time == 0) {
         missedAnswers++;
         stop();
-        tookToLong();
-        nextQuestion();
+        emptyHTML();
+        displayIntermission("timeout");
     }
 }
 
@@ -135,13 +112,58 @@ function submitAnswer(choice) {
         correctAnswers++;
         stop();
         console.log("Correct Answer: " + correctAnswers);
-        nextQuestion();
+        displayIntermission("correct");
     } else {
         wrongAnswers++;
         stop();
         console.log("Wrong Answer: " + wrongAnswers);
-        nextQuestion();
+        displayIntermission("wrong");
     }
+}
+
+function displayIntermission(type) {
+    emptyHTML();
+    switch (type) {
+        case "correct":
+            console.log("correct");
+            break;
+        case "wrong":
+            console.log("wrong");
+            break;
+        case "timeout":
+            console.log("timeout");
+            break;
+        default:
+            console.log("Nothing?");
+        //
+    }
+    nextQuestion();
+}
+
+
+//============================
+// HTML DOM related functions
+//============================
+function initialize(restart) {
+    //Works with most modern browsers EXCEPT chrome {security reasons?}
+    // $.getJSON("trivia.json", function(json) {
+    //     console.log(json); // this will show the info it in firebug console
+    // });
+    var startBtn = $("<button>");
+    if (restart !== undefined) {
+        startBtn.attr("id", "restart");
+        startBtn.text("Try Again?");
+    } else {
+        startBtn.attr("id", "start");
+        startBtn.text("Start Game!");
+    }
+    startBtn.click(function () {
+        timerText.text("Time Remaining: " + timeConverter(time));
+        start();
+        displayQuestion();
+        $(this).remove();
+    });
+    $(".container").append(startBtn);
 }
 
 function emptyHTML() {
@@ -149,6 +171,9 @@ function emptyHTML() {
     qChoices.empty();
 }
 
+function reset() {
+    correctAnswers = wrongAnswers = missedAnswers = currQuestion = 0;
+}
 
 function gameOver() {
     var endPage = "<h1>Results:</h1><h3>Correct Answers: <h3>" + correctAnswers + "<br>" +
@@ -156,5 +181,6 @@ function gameOver() {
         "<h3>Missed Answers: <h3>" + missedAnswers + "<br>";
     emptyHTML();
     qQuestion.html(endPage);
+    reset();
     initialize("restart");
 };

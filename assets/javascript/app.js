@@ -3,15 +3,17 @@ var data = '{ "q1": { "question": "Who teaches Harry how to play Wizard’s ches
 //HTML variables
 var qBox, qQuestion, qChoices, timerText;
 //JS variables
-var wrongGiphy = ["https://media.giphy.com/media/JAbAmpu1TshlS/giphy.gif","https://thumbs.gfycat.com/ImportantDisgustingJanenschia-max-1mb.gif","https://i.makeagif.com/media/3-28-2015/jScr_Q.gif"];
-var correctGiphy = ["https://media1.tenor.com/images/5e35fe87910ea9d4ec7140489d9cc70a/tenor.gif?itemid=4669304","https://media0.giphy.com/media/qLHzYjlA2FW8g/giphy.gif","https://66.media.tumblr.com/71f6a90971c389778b2c7f98c5f6692b/tumblr_oiojaowPTW1w0nutjo1_500.gif"];
-var timeoutGiphy = ["https://hips.hearstapps.com/digitalspyuk.cdnds.net/16/46/1479307306-harry-potter-philosophers-stone-wand-daniel-radcliffe.gif","https://media1.tenor.com/images/446fa599b8838be122719c655d845c10/tenor.gif?itemid=12099879",""];
+var wrongGiphy = ["https://media.giphy.com/media/JAbAmpu1TshlS/giphy.gif", "https://thumbs.gfycat.com/ImportantDisgustingJanenschia-max-1mb.gif", "https://i.makeagif.com/media/3-28-2015/jScr_Q.gif"];
+var correctGiphy = ["https://media1.tenor.com/images/5e35fe87910ea9d4ec7140489d9cc70a/tenor.gif?itemid=4669304", "https://media0.giphy.com/media/qLHzYjlA2FW8g/giphy.gif", "https://66.media.tumblr.com/71f6a90971c389778b2c7f98c5f6692b/tumblr_oiojaowPTW1w0nutjo1_500.gif"];
+var timeoutGiphy = ["https://media1.tenor.com/images/c450cde5fd4f2f21a338644388930439/tenor.gif?itemid=7285683", "https://media1.tenor.com/images/446fa599b8838be122719c655d845c10/tenor.gif?itemid=12099879", "https://hips.hearstapps.com/digitalspyuk.cdnds.net/16/46/1479307306-harry-potter-philosophers-stone-wand-daniel-radcliffe.gif"];
 var questionArr, intervalId;
 var correctAnswers = wrongAnswers = missedAnswers = 0;
 var questionKeys = [];
 var time = 15;
 var qInProgress = false;
+var intermission = false;
 var currQuestion = 0;
+var phrase = "";
 
 $(document).ready(function () {
     qBox = $("#question-box");
@@ -32,16 +34,26 @@ $(document).ready(function () {
 // Timer related functions
 //==========================
 function start() {
-    if (!qInProgress) {
+    console.log("Intermission is next:", intermission);
+    console.log("question in progress:", intermission);
+    if (!qInProgress && !intermission) {
+        console.log("Start countdown");
         intervalId = setInterval(countDown, 1000);
         qInProgress = true;
+        intermission = true;
+    }else if(!qInProgress && intermission) {
+        console.log("Start intermission");
+        timerText.text(phrase + "(" + time + ")");
+        intervalId = setInterval(coolDown, 1000);
+        qInProgress = true;
+        intermission = false;
     }
 }
 
 function stop() {
+    console.log("Stop");
     clearInterval(intervalId);
     qInProgress = false;
-    time = 15;
     timerText.text("Time Remaining: " + timeConverter(time));
 }
 
@@ -49,10 +61,19 @@ function countDown() {
     time--;
     timerText.text("Time Remaining: " + timeConverter(time));
     if (time == 0) {
-        missedAnswers++;
         stop();
-        emptyHTML();
-        displayIntermission("timeout");
+        submitAnswer("");
+    }
+}
+
+function coolDown(){
+    time--;
+    console.log(time);
+    timerText.text(phrase + "(" + time + ")");
+    if (time == 0) {
+        time = 15;
+        stop();
+        nextQuestion();
     }
 }
 
@@ -79,6 +100,8 @@ function timeConverter(t) {
 // Question related functions
 //=============================
 function nextQuestion() {
+    console.log("Next Question");
+    emptyHTML();
     if (currQuestion == 9) {
         gameOver();
     } else {
@@ -89,6 +112,7 @@ function nextQuestion() {
 }
 
 function displayQuestion() {
+    console.log("Dispalying Question");
     var qObject = questionArr[questionKeys[currQuestion]];
     emptyHTML();
     qQuestion.text(qObject.question);
@@ -98,8 +122,8 @@ function displayQuestion() {
         tempBtn.addClass("choices");
         tempBtn.text(element);
         tempBtn.click(function () {
-            submitAnswer($(this).attr("id"));
             console.log("clicked", this);
+            submitAnswer($(this).attr("id"));
         });
         qChoices.append(tempBtn);
     });
@@ -107,37 +131,46 @@ function displayQuestion() {
 }
 
 function submitAnswer(choice) {
+    console.log("Submitting answer");
+    stop();
     var answer = questionArr[questionKeys[currQuestion]].answer;
     if (choice == answer) {
         correctAnswers++;
-        stop();
+        
         console.log("Correct Answer: " + correctAnswers);
         displayIntermission("correct");
-    } else {
+    } else if (choice != ""){
         wrongAnswers++;
-        stop();
         console.log("Wrong Answer: " + wrongAnswers);
         displayIntermission("wrong");
+    }else{
+        missedAnswers++;
+        console.log("Wrong Answer: " + wrongAnswers);
+        displayIntermission("timeout");
     }
 }
 
 function displayIntermission(type) {
+    console.log("Intermission");
     emptyHTML();
+    time = 5;
     switch (type) {
         case "correct":
-            console.log("correct");
+            phrase = "10 points to... whatever house you're in!";
+            randomGiphy(correctGiphy);
             break;
         case "wrong":
-            console.log("wrong");
+            phrase = "Did you even read the books?? *Scoff*";
+            randomGiphy(wrongGiphy);
             break;
         case "timeout":
-            console.log("timeout");
+            phrase = "Hello? Anyone there? Spacing out?";
+            randomGiphy(timeoutGiphy);
             break;
         default:
             console.log("Nothing?");
-        //
     }
-    nextQuestion();
+    start();
 }
 
 
@@ -184,3 +217,10 @@ function gameOver() {
     reset();
     initialize("restart");
 };
+
+function randomGiphy(arr) {
+    console.log("Grab GIPHY");
+    var choice = Math.floor(Math.random() * arr.length);
+    var tempImg = $("<img src=" + arr[choice] + ">");
+    qQuestion.append(tempImg);
+}

@@ -5,7 +5,7 @@ var qBox, qQuestion, qChoices, timerText;
 //JS variables
 var wrongGiphy = ["https://media.giphy.com/media/JAbAmpu1TshlS/giphy.gif", "https://thumbs.gfycat.com/ImportantDisgustingJanenschia-max-1mb.gif", "https://i.makeagif.com/media/3-28-2015/jScr_Q.gif"];
 var correctGiphy = ["https://media1.tenor.com/images/5e35fe87910ea9d4ec7140489d9cc70a/tenor.gif?itemid=4669304", "https://media0.giphy.com/media/qLHzYjlA2FW8g/giphy.gif", "https://66.media.tumblr.com/71f6a90971c389778b2c7f98c5f6692b/tumblr_oiojaowPTW1w0nutjo1_500.gif"];
-var timeoutGiphy = ["https://media1.tenor.com/images/c450cde5fd4f2f21a338644388930439/tenor.gif?itemid=7285683", "https://media1.tenor.com/images/446fa599b8838be122719c655d845c10/tenor.gif?itemid=12099879", "https://hips.hearstapps.com/digitalspyuk.cdnds.net/16/46/1479307306-harry-potter-philosophers-stone-wand-daniel-radcliffe.gif"];
+var timeoutGiphy = ["https://media1.tenor.com/images/c450cde5fd4f2f21a338644388930439/tenor.gif?itemid=7285683", "https://media1.tenor.com/images/446fa599b8838be122719c655d845c10/tenor.gif?itemid=12099879", "https://media1.tenor.com/images/b3c2ee5348733ba9f517576b9764e323/tenor.gif?itemid=3974762"];
 var questionArr, intervalId;
 var correctAnswers = wrongAnswers = missedAnswers = 0;
 var questionKeys = [];
@@ -216,7 +216,7 @@ function gameOver() {
     qQuestion.html(endPage);
     reset();
     initialize("restart");
-};
+}
 
 function randomGiphy(arr) {
     console.log("Grab GIPHY");

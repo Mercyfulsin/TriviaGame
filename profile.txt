@@ -1,0 +1,3 @@
+<h1>Harry Potter trivia game</h1>
+                    <p>A simple multiple choice trivia game that uses JSON parsing and jQuery for
+                        dynamic changes to the page</p>
